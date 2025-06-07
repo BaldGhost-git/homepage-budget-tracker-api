@@ -1,0 +1,14 @@
+# Helix config
+.helix
+
+# environment config file
+.env
+.env.test
+
+
+# Logs
+logs/
+*.log
+
+# Node modules
+node_modules/

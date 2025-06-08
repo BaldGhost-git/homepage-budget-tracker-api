@@ -1,9 +1,12 @@
 // @deno-types="npm:@types/express@5.0.3";
 import express from "express";
 import api from "./routes/index.ts";
-const app = express();
+import { connect } from "./config/database.ts";
 
-app.get("/", (req, res) => {
+const app = express();
+await connect();
+
+app.get("/", (_, res) => {
   res.send("Welcome to the Budget Tracking API!");
 });
 

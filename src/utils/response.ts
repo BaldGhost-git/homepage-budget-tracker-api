@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Context } from "@oak/oak";
 
 export type ApiResponse<T = unknown> = {
   code: number;
@@ -37,9 +37,10 @@ export const mappingError = <E = unknown>(
 });
 
 export const baseResponse = <T = unknown>(
-  res: Response,
+  ctx: Context,
   data: ApiResponse<T>,
 ) => {
   const { code, data: body } = data;
-  return res.status(code ?? 200).json(body);
+  ctx.response.body = body;
+  ctx.response.status = code;
 };

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Context } from "@oak/oak";
 import { createUser, getUser } from "./auth_repository.ts";
 import {
   baseResponse,
@@ -6,25 +6,26 @@ import {
   mappingSuccess,
 } from "../../utils/index.ts";
 
-export function login(req: Request, res: Response) {
-  const { username, password } = req.body;
+export async function login(ctx: Context) {
+  const { username, password } = await ctx.request.body.json();
   // TODO: Check if user exists
   // TODO: Compare password from username
 
   // TODO: Call function to generate JWT
-  return baseResponse(res, mappingSuccess("Fetched user", []));
+  return baseResponse(ctx, mappingSuccess("Fetched user", []));
 }
 
-export async function register(req: Request, res: Response) {
-  const { username, password, full_name, email } = req.body;
+export async function register(ctx: Context) {
+  const { username, password, full_name, email } = await ctx.request.body
+    .json();
   const user = await getUser(username);
   if (user) {
-    res.send("Failed to register, user exists").status(400);
+    return baseResponse(ctx, mappingError("User exists"));
   }
   try {
     await createUser(username, password, full_name, email);
-    return baseResponse(res, mappingSuccess("Success", []));
+    return baseResponse(ctx, mappingSuccess("Success", []));
   } catch (e) {
-    return baseResponse(res, mappingError("Failed to register", e));
+    return baseResponse(ctx, mappingError("Failed to register", e));
   }
 }

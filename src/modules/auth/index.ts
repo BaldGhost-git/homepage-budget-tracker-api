@@ -1,7 +1,6 @@
-// @deno-types="npm:@types/express@5.0.3";
-import express from "express";
+import { Router } from "@oak/oak";
 import { login, register } from "./auth_handler.ts";
-const router = express.Router();
+const router = new Router();
 
 router.post("/login", login);
 router.post("/register", register);
